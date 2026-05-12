@@ -19,91 +19,94 @@ class _MainScreenState extends State<MainScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 24),
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Column(
+              children: [
+                const SizedBox(height: 24),
 
-              Image.asset('assets/logo.png', fit: BoxFit.contain),
+                Image.asset('assets/logo.png', fit: BoxFit.contain),
 
-              const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-              Center(child: AspectRatio(aspectRatio: 1.0, child: BingoBoard())),
+                Center(child: AspectRatio(aspectRatio: 1.0, child: BingoBoard())),
 
-              const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [const Color(0xFF1A0B16), const Color(0xFF24121F), const Color(0xFF12070F)],
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [const Color(0xFF1A0B16), const Color(0xFF24121F), const Color(0xFF12070F)],
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: const Color(0xFFFFA3E8).withOpacity(0.75), width: 2),
+
+                    boxShadow: [
+                      BoxShadow(color: const Color(0xFFFFA3E8).withOpacity(0.18), blurRadius: 10, spreadRadius: 0),
+                    ],
                   ),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFFFFA3E8).withOpacity(0.75), width: 2),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return ValueListenableBuilder<TextEditingValue>(
+                        valueListenable: controller,
+                        builder: (context, value, child) {
+                          final textLength = value.text.length;
 
-                  boxShadow: [
-                    BoxShadow(color: const Color(0xFFFFA3E8).withOpacity(0.18), blurRadius: 10, spreadRadius: 0),
-                  ],
-                ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return ValueListenableBuilder<TextEditingValue>(
-                      valueListenable: controller,
-                      builder: (context, value, child) {
-                        final textLength = value.text.length;
+                          double fontSize = 120;
 
-                        double fontSize = 120;
+                          if (textLength == 0) {
+                            fontSize = 42;
+                          }
 
-                        if (textLength == 0) {
-                          fontSize = 42;
-                        }
+                          if (textLength > 0 && textLength <= 6) {
+                            fontSize = 120;
+                          }
 
-                        if (textLength > 0 && textLength <= 6) {
-                          fontSize = 120;
-                        }
+                          if (textLength > 6) {
+                            fontSize = 100;
+                          }
 
-                        if (textLength > 6) {
-                          fontSize = 100;
-                        }
+                          if (textLength > 9) {
+                            fontSize = 58;
+                          }
 
-                        if (textLength > 9) {
-                          fontSize = 58;
-                        }
+                          return SizedBox(
+                            height: 170,
+                            child: TextField(
+                              controller: controller,
+                              maxLines: 2,
+                              minLines: 1,
+                              expands: false,
+                              textAlign: TextAlign.center,
+                              textAlignVertical: TextAlignVertical.center,
+                              cursorColor: const Color(0xFFFFA3E8),
 
-                        return SizedBox(
-                          height: 170,
-                          child: TextField(
-                            controller: controller,
-                            maxLines: 2,
-                            minLines: 1,
-                            expands: false,
-                            textAlign: TextAlign.center,
-                            textAlignVertical: TextAlignVertical.center,
-                            cursorColor: const Color(0xFFFFA3E8),
-
-                            style: GoogleFonts.patrickHand(
-                              color: Colors.white,
-                              fontSize: fontSize,
-                              fontWeight: FontWeight.bold,
-                              shadows: [Shadow(color: const Color(0xFFFFA3E8).withOpacity(0.35), blurRadius: 6)],
+                              style: GoogleFonts.patrickHand(
+                                color: Colors.white,
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.bold,
+                                shadows: [Shadow(color: const Color(0xFFFFA3E8).withOpacity(0.35), blurRadius: 6)],
+                              ),
+                              decoration: const InputDecoration(
+                                hintText: 'Write something...',
+                                hintStyle: TextStyle(color: Colors.white38),
+                                border: InputBorder.none,
+                                isCollapsed: true,
+                                contentPadding: EdgeInsets.zero,
+                              ),
                             ),
-                            decoration: const InputDecoration(
-                              hintText: 'Write something...',
-                              hintStyle: TextStyle(color: Colors.white38),
-                              border: InputBorder.none,
-                              isCollapsed: true,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
