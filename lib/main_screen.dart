@@ -76,9 +76,9 @@ class _MainScreenState extends State<MainScreen> {
                   const SizedBox(height: 24),
 
                   Center(
-                    child: AspectRatio(
-                      aspectRatio: 1.0,
-                      child: BingoBoard(key: boardKey, interactionEnabled: !textFocusNode.hasFocus),
+                    child: IgnorePointer(
+                      ignoring: textFocusNode.hasFocus,
+                      child: AspectRatio(aspectRatio: 1.0, child: BingoBoard(key: boardKey)),
                     ),
                   ),
 
