@@ -35,9 +35,17 @@ class _MainScreenState extends State<MainScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade900,
-                  border: Border.all(color: Colors.white24, width: 2),
-                  borderRadius: BorderRadius.circular(16),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [const Color(0xFF1A0B16), const Color(0xFF24121F), const Color(0xFF12070F)],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: const Color(0xFFFFA3E8).withOpacity(0.75), width: 2),
+
+                  boxShadow: [
+                    BoxShadow(color: const Color(0xFFFFA3E8).withOpacity(0.18), blurRadius: 10, spreadRadius: 0),
+                  ],
                 ),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
@@ -73,10 +81,13 @@ class _MainScreenState extends State<MainScreen> {
                             expands: false,
                             textAlign: TextAlign.center,
                             textAlignVertical: TextAlignVertical.center,
+                            cursorColor: const Color(0xFFFFA3E8),
+
                             style: GoogleFonts.patrickHand(
                               color: Colors.white,
                               fontSize: fontSize,
                               fontWeight: FontWeight.bold,
+                              shadows: [Shadow(color: const Color(0xFFFFA3E8).withOpacity(0.35), blurRadius: 6)],
                             ),
                             decoration: const InputDecoration(
                               hintText: 'Write something...',
