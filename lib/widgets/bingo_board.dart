@@ -7,11 +7,11 @@ class BingoBoard extends StatefulWidget {
   const BingoBoard({super.key});
 
   @override
-  State<BingoBoard> createState() => _BingoBoardState();
+  State<BingoBoard> createState() => BingoBoardState();
 }
 
-class _BingoBoardState extends State<BingoBoard> {
-  late final List<BingoField> fields = generateBoard();
+class BingoBoardState extends State<BingoBoard> {
+  late List<BingoField> fields = generateBoard();
 
   List<BingoField> generateBoard() {
     while (true) {
@@ -72,6 +72,12 @@ class _BingoBoardState extends State<BingoBoard> {
     }
 
     return true;
+  }
+
+  void resetBoard() {
+    setState(() {
+      fields = generateBoard();
+    });
   }
 
   @override

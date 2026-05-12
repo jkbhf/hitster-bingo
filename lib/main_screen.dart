@@ -11,6 +11,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final TextEditingController controller = TextEditingController();
+  final GlobalKey<BingoBoardState> boardKey = GlobalKey<BingoBoardState>();
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +26,34 @@ class _MainScreenState extends State<MainScreen> {
               children: [
                 const SizedBox(height: 24),
 
-                Image.asset('assets/logo.png', fit: BoxFit.contain),
+                Row(
+                  children: [
+                    Image.asset('assets/logo.png', fit: BoxFit.contain, height: 70),
+
+                    const Spacer(),
+
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: const Color(0xFFFFA3E8).withOpacity(0.6)),
+                        gradient: const LinearGradient(colors: [Color(0xFF1A0B16), Color(0xFF24121F)]),
+                        boxShadow: [BoxShadow(color: const Color(0xFFFFA3E8).withOpacity(0.12), blurRadius: 8)],
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          boardKey.currentState?.resetBoard();
+                        },
+                        icon: const Icon(Icons.refresh_rounded, color: Color(0xFFFFA3E8)),
+                      ),
+                    ),
+                  ],
+                ),
 
                 const SizedBox(height: 24),
 
-                Center(child: AspectRatio(aspectRatio: 1.0, child: BingoBoard())),
+                Center(
+                  child: AspectRatio(aspectRatio: 1.0, child: BingoBoard(key: boardKey)),
+                ),
 
                 const SizedBox(height: 24),
 
