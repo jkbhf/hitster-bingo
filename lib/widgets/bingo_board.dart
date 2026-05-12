@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hitster/models/bingo_field.dart';
 import 'package:hitster/models/bingo_field_type.dart';
 import 'package:hitster/widgets/bingo_field_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BingoBoard extends StatefulWidget {
   const BingoBoard({super.key});
@@ -11,7 +14,39 @@ class BingoBoard extends StatefulWidget {
 }
 
 class BingoBoardState extends State<BingoBoard> {
-  late List<BingoField> fields = generateBoard();
+  List<BingoField>? fields;
+
+  @override
+  void initState() {
+    super.initState();
+    loadBoard();
+  }
+
+  Future<void> loadBoard() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final jsonString = prefs.getString('bingo_board');
+
+    if (jsonString == null) {
+      fields = generateBoard();
+      setState(() {});
+      return;
+    }
+
+    final decoded = jsonDecode(jsonString) as List;
+
+    fields = decoded.map((e) => BingoField.fromJson(e)).toList();
+
+    setState(() {});
+  }
+
+  Future<void> saveBoard() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final jsonList = fields!.map((e) => e.toJson()).toList();
+
+    await prefs.setString('bingo_board', jsonEncode(jsonList));
+  }
 
   List<BingoField> generateBoard() {
     while (true) {
@@ -78,10 +113,16 @@ class BingoBoardState extends State<BingoBoard> {
     setState(() {
       fields = generateBoard();
     });
+
+    saveBoard();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (fields == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -92,14 +133,14 @@ class BingoBoardState extends State<BingoBoard> {
         ],
       ),
       child: GridView.builder(
-        itemCount: fields.length,
+        itemCount: fields!.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 5,
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
         ),
         itemBuilder: (context, index) {
-          final field = fields[index];
+          final field = fields![index];
 
           return BingoFieldWidget(
             field: field,
@@ -107,6 +148,8 @@ class BingoBoardState extends State<BingoBoard> {
               setState(() {
                 field.isChecked = !field.isChecked;
               });
+
+              saveBoard();
             },
           );
         },
