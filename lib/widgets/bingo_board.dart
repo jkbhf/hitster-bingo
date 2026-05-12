@@ -7,7 +7,9 @@ import 'package:hitster/widgets/bingo_field_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class BingoBoard extends StatefulWidget {
-  const BingoBoard({super.key});
+  final bool interactionEnabled;
+
+  const BingoBoard({super.key, required this.interactionEnabled});
 
   @override
   State<BingoBoard> createState() => BingoBoardState();
@@ -145,6 +147,10 @@ class BingoBoardState extends State<BingoBoard> {
           return BingoFieldWidget(
             field: field,
             onTap: () {
+              if (!widget.interactionEnabled) {
+                return;
+              }
+
               setState(() {
                 field.isChecked = !field.isChecked;
               });
