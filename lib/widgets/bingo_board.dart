@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:hitster/models/bingo_field.dart';
 import 'package:hitster/models/bingo_field_type.dart';
@@ -13,10 +11,68 @@ class BingoBoard extends StatefulWidget {
 }
 
 class _BingoBoardState extends State<BingoBoard> {
-  late final List<BingoField> fields = List.generate(
-    25,
-    (index) => BingoField(type: BingoFieldType.values[Random().nextInt(BingoFieldType.values.length)]),
-  );
+  late final List<BingoField> fields = generateBoard();
+
+  List<BingoField> generateBoard() {
+    while (true) {
+      final pool = <BingoFieldType>[];
+
+      // Each type exactly 5 times
+      for (final type in BingoFieldType.values) {
+        for (int i = 0; i < 5; i++) {
+          pool.add(type);
+        }
+      }
+
+      pool.shuffle();
+
+      if (isValid(pool)) {
+        return pool.map((type) => BingoField(type: type)).toList();
+      }
+    }
+  }
+
+  bool isValid(List<BingoFieldType> grid) {
+    // Check rows
+    for (int row = 0; row < 5; row++) {
+      final rowValues = grid.skip(row * 5).take(5).toList();
+
+      // At least 4 unique types
+      if (rowValues.toSet().length < 4) {
+        return false;
+      }
+
+      // No 3 identical in a row
+      for (int i = 0; i < 3; i++) {
+        if (rowValues[i] == rowValues[i + 1] && rowValues[i] == rowValues[i + 2]) {
+          return false;
+        }
+      }
+    }
+
+    // Check columns
+    for (int col = 0; col < 5; col++) {
+      final colValues = <BingoFieldType>[];
+
+      for (int row = 0; row < 5; row++) {
+        colValues.add(grid[row * 5 + col]);
+      }
+
+      // At least 4 unique types
+      if (colValues.toSet().length < 4) {
+        return false;
+      }
+
+      // No 3 identical in a column
+      for (int i = 0; i < 3; i++) {
+        if (colValues[i] == colValues[i + 1] && colValues[i] == colValues[i + 2]) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
